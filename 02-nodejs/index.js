@@ -16,15 +16,13 @@ function obterUsuario(callback) {
 
 }
 
-function obterTelefone(idUsuario) {
+function obterTelefone(idUsuario,callback) {
     setTimeout(() => {
-        return {
+        return callback (null, {
             telefone: '1199002',
             ddd: 11
-        }
-    }
-    )
-
+        })
+    }, 2000);
 }
 
 function obterEndereco (idUsuario) {
@@ -35,8 +33,16 @@ function resolverUsuario(erro, usuario) {
     console.log('usuario', usuario)
 
 }
-obterUsuario(resolverUsuario)
-// (apagar) const usuario = obterUsuario()
-// const telefone = obterTelefone(usuario.id)
-
-// console.log('telefone', telefone)
+obterUsuario(function resolverUsuario(erro, usuario) {
+    // se o valor for nulo, nao vai cair aqui. se tiver algum valor, cairá
+    if (error) {
+        console.error('erro em usuario', error)
+        return;
+    }
+    obterTelefone(usuario.id,function resolverTelefone(error1, telefone) {
+        if (error) {
+            console.error('erro em telefone', error)
+            return;
+        }
+    })
+})
